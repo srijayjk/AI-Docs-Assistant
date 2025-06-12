@@ -1,5 +1,9 @@
 # DevBuddy-TinyLlama
 
+
+## link https://chatgpt.com/share/684b2622-5cc8-800e-886b-4d3cbdb8d6c9
+
+
 🗓️ Project Timeline (8 Weeks)
 ✅ Week 1–2: Planning + Retrieval Pipeline
 Choose a base model (e.g., Mistral-7B, TinyLlama, or Zephyr)
