@@ -83,14 +83,10 @@ pip install -r requirements.txt
 ```
 4. Run FastAPI backend
 ```bash
-Copy
-Edit
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 5. Run Streamlit frontend
 ```bash
-Copy
-Edit
 streamlit run ui/streamlit_app.py
 ```
 
@@ -105,14 +101,10 @@ API_KEY=srijaykey123
 ## 📦 Docker Deployment
 1. Build the Docker image
 ```bash
-Copy
-Edit
 docker compose up --build
 ```
 2. Run the container
 ```bash
-Copy
-Edit
 docker-compose up
 ```
 (Optional) Use Docker Compose (if docker-compose.yml is added)
@@ -120,16 +112,12 @@ docker-compose up
 🧠 Example Usage
 3. Upload a Document
 ```bash
-Copy
-Edit
 curl -X POST http://localhost:8000/upload \
   -H "X-API-Key: srijaykey123" \
   -F "file=@data/docs/sample.pdf"
 ```
 4. Ask a Question
 ```bash
-Copy
-Edit
 curl -X POST http://localhost:8000/ask \
   -H "X-API-Key: srijaykey123" \
   -H "Content-Type: application/json" \
@@ -148,8 +136,6 @@ curl -X POST http://localhost:8000/ask \
 ## 🧹 Cleanup / Reset
 You can clear the vector store manually:
 ```bash
-Copy
-Edit
 rm -rf chroma_store/
 ```
 Or programmatically in your app.
