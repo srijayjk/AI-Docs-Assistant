@@ -107,13 +107,13 @@ API_KEY=srijaykey123
 ```bash
 Copy
 Edit
-docker build -t ai-docs-assistant .
+docker compose up --build
 ```
 2. Run the container
 ```bash
 Copy
 Edit
-docker run -p 8000:8000 ai-docs-assistant
+docker-compose up
 ```
 (Optional) Use Docker Compose (if docker-compose.yml is added)
 
