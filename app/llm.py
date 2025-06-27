@@ -1,16 +1,22 @@
 import requests
 
-def generate_answer(prompt, context, model="llama3.2:3b"):
-    full_prompt = f"Answer the question based on the following context:\n\n{context}\n\nQuestion: {prompt}"
-    
+
+def generate_answer(full_prompt, model="llama3.2:3b"):
+    print(f" 📄 Prompt:  {full_prompt} ")
     response = requests.post(
-        "http://localhost:11434/api/generate",
+        "http://ollama:11434/api/generate",
         json={
             "model": model,
             "prompt": full_prompt,
             "stream": False
         }
     )
-    
-    data = response.json()
-    return data.get("response", "No response")
+
+    try:
+        data = response.json()
+        a = data.get("response", "No response")
+        print(f"📄 Got to Generate Answer LLM.py {a}")
+        return data.get("response", "No response")
+    except Exception as e:
+        print(f"Error calling Ollama: {e}")
+        return "Error generating response"
