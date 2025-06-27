@@ -1,0 +1,80 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# VS Code settings
+.vscode/
+
+# Ollama local model data and SSH keys
+.ollama/
+
+# Environment variables and keys
+.env
+*.env
+.env.*
+
+# Docker
+*.log
+docker-compose.override.yml
+docker-compose.*.yml
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# Pylint
+.pylint.d/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.pytorch_env/
+.venv/
+*.egg-info/
+
+# Build artifacts
+build/
+dist/
+*.egg
+.eggs/
+
+# Lock files (if not using them intentionally)
+Pipfile.lock
+poetry.lock
+
+# SQLite DBs or user-generated files (if any)
+*.sqlite3
+*.db
+
+# Ignore model files or checkpoints if generated elsewhere
+*.pth
+*.pt
+*.ckpt
