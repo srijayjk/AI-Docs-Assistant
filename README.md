@@ -36,7 +36,7 @@ An AI-powered document question-answering application built using FastAPI, Strea
       Prompt LLM             <-- With context + question
           |
      Return Answer           <-- Via FastAPI
-
+---
 
 ## 📂 Project Structure
 
