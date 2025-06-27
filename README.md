@@ -39,7 +39,7 @@ An AI-powered document question-answering application built using FastAPI, Strea
 ---
 
 ## 📂 Project Structure
-
+```bash
 AI-Docs-Assistant/
 ├── app/
 │ ├── main.py # FastAPI app
@@ -53,8 +53,7 @@ AI-Docs-Assistant/
 ├── Dockerfile
 ├── .env
 └── README.md
-
-
+```
 ---
 
 ## ⚙️ Prerequisites
