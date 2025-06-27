@@ -99,6 +99,17 @@ API_KEY=srijaykey123
 
 
 ## 📦 Docker Deployment
+
+# Ensure llama3.2:3b model is pulled
+```bash
+docker run --rm -v ollama_data:/root/.ollama ollama/ollama pull llama3.2:3b
+docker-compose down # Stop containers without deleting:
+docker-compose down -v # Stop and remove volumes too:
+docker ps # See running containers:
+docker exec -it fastapi-app /bin/bash # Shell into FastAPI container:
+```
+
+
 1. Build the Docker image
 ```bash
 docker compose up --build
