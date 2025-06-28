@@ -9,7 +9,6 @@ import shutil
 import requests
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from fastapi.responses import Response
-from app.metrics import REQUEST_COUNT, REQUEST_FAILURES, REQUEST_LATENCY
 
 
 app = FastAPI()

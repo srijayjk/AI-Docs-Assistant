@@ -6,8 +6,9 @@ import chromadb
 from chromadb.utils import embedding_functions
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from prometheus_client import Summary
-from app.metrics import REQUEST_COUNT, REQUEST_FAILURES, REQUEST_LATENCY
+from app.metrics import REQUEST_COUNT, REQUEST_FAILURES, REQUEST_LATENCY, INPUT_TOKENS, OUTPUT_TOKENS, SIMILARITY_SCORE
 import time
+from app.utils import count_tokens
 
 class ChromaVectorStore:
     def __init__(self, persist_directory="chroma_store"):
@@ -67,22 +68,50 @@ class RAGEngine:
         return context
 
     def query(self, question, model="llama3.2:3b"):
-
         start = time.time()
         REQUEST_COUNT.inc()
 
-        context = self.retrieve_context(question)
-        full_prompt = f"Based on the following context, answer the question accurately and concisely. If the answer is not in the context, state that you don't know.\n\nContext:\n{context}\n\nQuestion: {question}\n\nAnswer:"
-
         try:
-            generated_answer = generate_answer(
-                full_prompt=full_prompt,
-                model=model,
-            )
+            # Retrieve context from top-k similar documents
+            print("\n📄 Retreving context from documents ...")
+            chunks = self.index.collection.query(query_texts=[question], n_results=1)
+
+            # Log similarity score if available
+            if chunks and "distances" in chunks and chunks["distances"][0]:
+                similarity = 1 - chunks["distances"][0][0]  # cosine similarity
+                SIMILARITY_SCORE.observe(similarity)
+
+            if chunks and "documents" in chunks and chunks["documents"][0]:
+                context = "\n".join(chunks["documents"][0])
+            else:
+                context = "No context found in the document. Provide a general answer and mention missing content."
+
+            full_prompt = f"""Based on the following context, answer the question accurately and concisely. 
+                If the answer is not in the context, state that you don't know.
+
+                Context:
+                {context}
+
+                Question: {question}
+
+                Answer:"""
+
+            # Log input tokens
+            input_tokens = count_tokens(full_prompt)
+            INPUT_TOKENS.observe(input_tokens)
+
+            generated_answer = generate_answer(full_prompt=full_prompt, model=model)
+
+            # Log output tokens
+            output_tokens = count_tokens(generated_answer)
+            OUTPUT_TOKENS.observe(output_tokens)
+
             return generated_answer
+
         except Exception as e:
             REQUEST_FAILURES.inc()
             print(f"⚠️ An unexpected error occurred during LLM generation: {e}")
             return "An internal error occurred during text generation."
+
         finally:
             REQUEST_LATENCY.observe(time.time() - start)
