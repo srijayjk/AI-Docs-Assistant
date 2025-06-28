@@ -5,6 +5,9 @@ import uuid
 import chromadb
 from chromadb.utils import embedding_functions
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from prometheus_client import Summary
+from app.metrics import REQUEST_COUNT, REQUEST_FAILURES, REQUEST_LATENCY
+import time
 
 class ChromaVectorStore:
     def __init__(self, persist_directory="chroma_store"):
@@ -64,6 +67,10 @@ class RAGEngine:
         return context
 
     def query(self, question, model="llama3.2:3b"):
+
+        start = time.time()
+        REQUEST_COUNT.inc()
+
         context = self.retrieve_context(question)
         full_prompt = f"Based on the following context, answer the question accurately and concisely. If the answer is not in the context, state that you don't know.\n\nContext:\n{context}\n\nQuestion: {question}\n\nAnswer:"
 
@@ -74,5 +81,8 @@ class RAGEngine:
             )
             return generated_answer
         except Exception as e:
+            REQUEST_FAILURES.inc()
             print(f"⚠️ An unexpected error occurred during LLM generation: {e}")
             return "An internal error occurred during text generation."
+        finally:
+            REQUEST_LATENCY.observe(time.time() - start)

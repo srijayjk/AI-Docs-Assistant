@@ -142,8 +142,17 @@ curl -X POST http://localhost:8000/ask \
 - Embeddings: RecursiveCharacterTextSplitter
 - OCR/Parsing: unstructured, PyMuPDF, Tesseract
 - LLM: LLaMA3 via Ollama
+- Prometheus and Grafana: monitoring and visualization
 
 
+| Service      | Port  | Description                            |
+| ------------ | ----- | -------------------------------------- |
+| `fastapi`    | 8000  | Your main app exposing `/metrics`      |
+| `ollama`     | 11434 | Model server                           |
+| `prometheus` | 9090  | Metrics scraping & time-series storage |
+| `grafana`    | 3000  | Dashboard for visualization            |
+
+![](image.png)
 ## 🧹 Cleanup / Reset
 You can clear the vector store manually:
 ```bash

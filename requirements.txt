@@ -12,3 +12,4 @@ pdf2image
 unstructured-inference
 pi-heif
 langchain
+prometheus_client
