@@ -8,7 +8,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from prometheus_client import Summary
 from app.metrics import REQUEST_COUNT, REQUEST_FAILURES, REQUEST_LATENCY, INPUT_TOKENS, OUTPUT_TOKENS, SIMILARITY_SCORE
 import time
-from app.utils import count_tokens
+
+
+def count_tokens(text: str) -> int:
+    return len(text.split())
 
 class ChromaVectorStore:
     def __init__(self, persist_directory="chroma_store"):
@@ -57,16 +60,6 @@ class RAGEngine:
         splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
         return [chunk.page_content for chunk in splitter.create_documents([text])]
 
-    def retrieve_context(self, question: str) -> str:
-        print("\n")
-        print(f"📄 Retreving context from documents ...")
-        chunks = self.index.query(question, k=5)
-        if chunks:
-            context = "\n".join(chunks)
-        else:
-            context = "No context found in the document, Provide a generalized answer and inform there is no mathching content"
-        return context
-
     def query(self, question, model="llama3.2:3b"):
         start = time.time()
         REQUEST_COUNT.inc()
@@ -75,7 +68,6 @@ class RAGEngine:
             # Retrieve context from top-k similar documents
             print("\n📄 Retreving context from documents ...")
             chunks = self.index.collection.query(query_texts=[question], n_results=1)
-
             # Log similarity score if available
             if chunks and "distances" in chunks and chunks["distances"][0]:
                 similarity = 1 - chunks["distances"][0][0]  # cosine similarity
@@ -86,12 +78,9 @@ class RAGEngine:
             else:
                 context = "No context found in the document. Provide a general answer and mention missing content."
 
-            full_prompt = f"""Based on the following context, answer the question accurately and concisely. 
-                If the answer is not in the context, state that you don't know.
-
+            full_prompt = f"""You are a helpfull and polite assistant. Answer the question accurately and concisely. 
                 Context:
                 {context}
-
                 Question: {question}
 
                 Answer:"""
@@ -105,6 +94,9 @@ class RAGEngine:
             # Log output tokens
             output_tokens = count_tokens(generated_answer)
             OUTPUT_TOKENS.observe(output_tokens)
+
+            print(f"📤 Full prompt:\n{full_prompt}")
+            print(f"📥 LLM output:\n{generated_answer}")
 
             return generated_answer
 
